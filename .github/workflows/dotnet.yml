@@ -17,7 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Cmake
-      uses: Symbitic/install-cmake@v0.1.0
+      uses: threeal/cmake-action@v1.3.0
+    - name: Install Ninja
+      uses: ashutoshvarma/setup-ninja@v1.1
     - name: Generate Yoga Build File
       run: cmake . -B YogaCpp/build -G Ninja
     - name: Build Yoga
