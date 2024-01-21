@@ -23,7 +23,7 @@ jobs:
       with:
         run-build: false
     - name: Install Ninja
-      uses: ashutoshvarma/setup-ninja@v1.1
+      uses: ahmedyarub/setup-ninja@master
     - name: Generate Yoga Build File
       run: cmake . -B YogaCpp/build -G Ninja
     - name: Build Yoga
