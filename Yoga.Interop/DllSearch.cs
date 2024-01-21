@@ -5,7 +5,7 @@ namespace Yoga.Interop;
 
 internal static class DllSearch {
 
-    const string NativeLib = "yogacore";
+    const string NativeLib = "yoga";
 
     static DllSearch()
     {

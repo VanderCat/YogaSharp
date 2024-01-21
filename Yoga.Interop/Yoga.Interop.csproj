@@ -14,8 +14,14 @@
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     
-    <ItemGroup>
-        <Content Include="../YogaCpp/build/yoga/yogacore.dll">
+    <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+        <Content Include="../YogaCpp/build/yoga.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Pack>false</Pack>
+        </Content>
+    </ItemGroup>
+    <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
+        <Content Include="../YogaCpp/build/libyoga.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Pack>false</Pack>
         </Content>
