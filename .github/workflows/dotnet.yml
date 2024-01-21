@@ -16,8 +16,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: recursive
     - name: Install Cmake
       uses: threeal/cmake-action@v1.3.0
+      with:
+        run-build: false
     - name: Install Ninja
       uses: ashutoshvarma/setup-ninja@v1.1
     - name: Generate Yoga Build File
