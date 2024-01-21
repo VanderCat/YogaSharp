@@ -18,17 +18,12 @@ jobs:
     - uses: actions/checkout@v3
       with:
         submodules: recursive
-    - name: Install Cmake
+    - name: Build Yoga
       uses: threeal/cmake-action@v1.3.0
       with:
-        run-build: false
-    - name: Install Ninja
-      uses: ahmedyarub/setup-ninja@master
-    - name: Generate Yoga Build File
-      run: cmake . -B YogaCpp/build -G Ninja
-    - name: Build Yoga
-      working-directory: YogaCpp/build
-      run: ninja
+        run-build: true
+        build-dir: YogaCpp/build
+        generator: Ninja
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
