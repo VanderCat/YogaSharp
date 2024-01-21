@@ -1,0 +1,3 @@
+[submodule "YogaCpp"]
+	path = YogaCpp
+	url = https://github.com/facebook/yoga
