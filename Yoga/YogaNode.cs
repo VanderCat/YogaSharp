@@ -1,4 +1,5 @@
-﻿using Yoga.Interop;
+﻿using System.Collections;
+using Yoga.Interop;
 
 namespace Yoga;
 
@@ -39,6 +40,19 @@ public class YogaNode : YogaBase {
         set {
             unsafe {
                 YogaInterop.YGNodeStyleSetHeight(RawPointer, value);
+            }
+        }
+    }
+
+    public YogaPositionType PositionType {
+        get {
+            unsafe {
+                return (YogaPositionType)YogaInterop.YGNodeStyleGetPositionType(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetPositionType(RawPointer, (YGPositionType)value);
             }
         }
     }
@@ -127,23 +141,29 @@ public class YogaNode : YogaBase {
         }
     }
 
+    public YogaNodeList Children;
+
     ~YogaNode() {
         unsafe {
             YogaInterop.YGNodeFinalize(RawPointer);
         }
     }
 
-    public unsafe YogaNode(void* rawPointer) : base(rawPointer) { }
+    public unsafe YogaNode(void* rawPointer) : base(rawPointer) {
+        Children = new YogaNodeList(RawPointer);
+    }
 
     public YogaNode() {
         unsafe {
             RawPointer = YogaInterop.YGNodeNew();
+            Children = new YogaNodeList(RawPointer);
         }
     }
     
     public YogaNode(YogaConfig config) {
         unsafe {
             RawPointer = YogaInterop.YGNodeNewWithConfig(config.RawPointer);
+            Children = new YogaNodeList(RawPointer);
         }
     }
 
@@ -171,6 +191,68 @@ public class YogaNode : YogaBase {
     public void CalculateLayout(float width = Undefined, float height = Undefined, YogaDirection yogaDirection = YogaDirection.Inherit) {
         unsafe {
             YogaInterop.YGNodeCalculateLayout(RawPointer, width, height, (YGDirection)yogaDirection);
+        }
+    }
+
+    public YogaValue StyleGetPosition(YogaEdge edge) {
+        unsafe {
+            return YogaInterop.YGNodeStyleGetPosition(RawPointer, (YGEdge)edge).ToYogaValue();
+        }
+    }
+    public void StyleSetPosition(YogaEdge edge, float position) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetPosition(RawPointer, (YGEdge)edge, position);
+        }
+    }
+    public void StyleSetPositionPercent(YogaEdge edge, float position) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetPositionPercent(RawPointer, (YGEdge)edge, position);
+        }
+    }
+    
+    public YogaValue StyleGetMargin(YogaEdge edge) {
+        unsafe {
+            return YogaInterop.YGNodeStyleGetMargin(RawPointer, (YGEdge)edge).ToYogaValue();
+        }
+    }
+    public void StyleSetMargin(YogaEdge edge, float margin) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetMargin(RawPointer, (YGEdge)edge, margin);
+        }
+    }
+    public void StyleSetMarginAuto(YogaEdge edge) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetMarginAuto(RawPointer, (YGEdge)edge);
+        }
+    }
+    public void StyleSetMarginPercent(YogaEdge edge, float margin) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetMarginPercent(RawPointer, (YGEdge)edge, margin);
+        }
+    }
+    public YogaValue StyleGetPadding(YogaEdge edge) {
+        unsafe {
+            return YogaInterop.YGNodeStyleGetPadding(RawPointer, (YGEdge)edge).ToYogaValue();
+        }
+    }
+    public void StyleSetPadding(YogaEdge edge, float padding) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetPadding(RawPointer, (YGEdge)edge, padding);
+        }
+    }
+    public void StyleSetPaddingPercent(YogaEdge edge, float padding) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetPaddingPercent(RawPointer, (YGEdge)edge, padding);
+        }
+    }
+    public float StyleGetBorder(YogaEdge edge) {
+        unsafe {
+            return YogaInterop.YGNodeStyleGetBorder(RawPointer, (YGEdge)edge);
+        }
+    }
+    public void StyleSetBorder(YogaEdge edge, float border) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetBorder(RawPointer, (YGEdge)edge, border);
         }
     }
 }

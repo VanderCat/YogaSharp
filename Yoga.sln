@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yoga.Interop", "Yoga.Intero
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yoga.Tests", "Yoga.Tests\Yoga.Tests.csproj", "{AB56A62D-C174-4782-A844-E22CD33D1FF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yoga.Tests.Visual", "Yoga.Tests.Visual\Yoga.Tests.Visual.csproj", "{922EFD9C-6628-42D2-B633-C089B2F44D3F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{AB56A62D-C174-4782-A844-E22CD33D1FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB56A62D-C174-4782-A844-E22CD33D1FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB56A62D-C174-4782-A844-E22CD33D1FF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{922EFD9C-6628-42D2-B633-C089B2F44D3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{922EFD9C-6628-42D2-B633-C089B2F44D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{922EFD9C-6628-42D2-B633-C089B2F44D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{922EFD9C-6628-42D2-B633-C089B2F44D3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -37,6 +37,7 @@ public class YGSharpAlignBaselineTest {
             Width = 600f,
             FlexDirection = YogaFlexDirection.Column
         };
+        root.Children.Add(child1);
         
         child2 = new YogaNode(YGConfig) {
             Height = 500f,
@@ -56,18 +57,18 @@ public class YGSharpAlignBaselineTest {
             FlexDirection = YogaFlexDirection.Column
         };
         
+        root.Children.Add(child2);
+        
+        child2.Children.Add(child2_1);
+        child2.Children.Add(child2_2);
+        
+        unsafe {
+            YogaInterop.YGNodeSetBaselineFunc(child2_2.RawPointer, &BaselineFunction);
+        }
+        
         child2_2.IsReferenceBaseline = true;
         
         root.CalculateLayout();
-        
-        unsafe {
-            YogaInterop.YGNodeInsertChild(root.RawPointer, child1.RawPointer, new UIntPtr(0));
-            YogaInterop.YGNodeInsertChild(root.RawPointer, child2.RawPointer, new UIntPtr(1));
-            YogaInterop.YGNodeInsertChild(child2.RawPointer, child2_1.RawPointer, new UIntPtr(0));
-            
-            YogaInterop.YGNodeSetBaselineFunc(child2_2.RawPointer, &BaselineFunction);
-            YogaInterop.YGNodeInsertChild(child2.RawPointer, child2_2.RawPointer, new UIntPtr(1));
-        }
     }
 
     [Test]
