@@ -1,14 +1,14 @@
-using Yoga.Interop;
+﻿using Yoga.Interop;
 
 namespace Yoga; 
 
 public enum YogaAlign {
-    Baseline = YGAlign.YGAlignBaseline,
     Auto = YGAlign.YGAlignAuto,
+    Baseline = YGAlign.YGAlignBaseline,
     Center = YGAlign.YGAlignCenter,
     Stretch = YGAlign.YGAlignStretch,
-    FlexEnd = YGAlign.YGAlignFlexEnd,
     FlexStart = YGAlign.YGAlignFlexStart,
+    FlexEnd = YGAlign.YGAlignFlexEnd,
     SpaceAround = YGAlign.YGAlignSpaceAround,
     SpaceBetween = YGAlign.YGAlignSpaceBetween,
     SpaceEvenly = YGAlign.YGAlignSpaceEvenly

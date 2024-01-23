@@ -60,4 +60,43 @@ public partial class YogaNode {
             }
         }
     }
+
+    public YogaDirection Direction {
+        get {
+            unsafe {
+                return (YogaDirection)YogaInterop.YGNodeLayoutGetDirection(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetDirection(RawPointer, (YGDirection)value);
+            }
+        }
+    }
+    
+    public bool HadOverflow {
+        get {
+            unsafe {
+                return YogaInterop.YGNodeLayoutGetHadOverflow(RawPointer);
+            }
+        }
+    }
+
+    public float GetMargin(YogaEdge edge) {
+        unsafe {
+            return YogaInterop.YGNodeLayoutGetMargin(RawPointer, (YGEdge) edge);
+        }
+    }
+    
+    public float GetBorder(YogaEdge edge) {
+        unsafe {
+            return YogaInterop.YGNodeLayoutGetBorder(RawPointer, (YGEdge)edge);
+        }
+    }
+    
+    public float GetPadding(YogaEdge edge) {
+        unsafe {
+            return YogaInterop.YGNodeLayoutGetPadding(RawPointer, (YGEdge)edge);
+        }
+    }
 }

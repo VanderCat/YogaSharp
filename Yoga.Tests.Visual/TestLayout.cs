@@ -27,7 +27,7 @@ public class TestLayout : IScene {
         _rootNode.StyleSetBorder(YogaEdge.All, 1);
         
         var extraNode = new YogaNode {
-            Owner = _rootNode
+            Parent = _rootNode
         };
         extraNode.StyleSetWidthPercent(75);
         extraNode.StyleSetHeightPercent(100);
@@ -36,7 +36,7 @@ public class TestLayout : IScene {
         var funnyNode = new YogaNode {
             Width = 400,
             Height = 200,
-            Owner = extraNode
+            Parent = extraNode
         };
         funnyNode.StyleSetBorder(YogaEdge.All, 4);
         _rootNode.CalculateLayout();

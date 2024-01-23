@@ -98,11 +98,6 @@ public partial class YogaNode {
             return YogaInterop.YGNodeStyleGetBorder(RawPointer, (YGEdge)edge);
         }
     }
-    public float GetBorder(YogaEdge edge) {
-        unsafe {
-            return YogaInterop.YGNodeLayoutGetBorder(RawPointer, (YGEdge)edge);
-        }
-    }
     public void StyleSetBorder(YogaEdge edge, float border) {
         unsafe {
             YogaInterop.YGNodeStyleSetBorder(RawPointer, (YGEdge)edge, border);
@@ -136,6 +131,135 @@ public partial class YogaNode {
     public void StyleGetHeight() {
         unsafe {
             YogaInterop.YGNodeStyleGetHeight(RawPointer);
+        }
+    }
+
+    public void CopyStyleFrom(YogaNode node) {
+        unsafe {
+            YogaInterop.YGNodeCopyStyle(RawPointer, node.RawPointer);
+        }
+    }
+
+    public YogaDirection StyleGetDirection() {
+        unsafe {
+            return (YogaDirection)YogaInterop.YGNodeStyleGetDirection(RawPointer);
+        }
+    }
+
+    public YogaJustify JustifyContent {
+        get {
+            unsafe {
+                return (YogaJustify) YogaInterop.YGNodeStyleGetJustifyContent(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetJustifyContent(RawPointer, (YGJustify)value);
+            }
+        }
+    }
+
+    public YogaAlign AlignContent {
+        get {
+            unsafe {
+                return (YogaAlign) YogaInterop.YGNodeStyleGetAlignContent(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetAlignContent(RawPointer, (YGAlign)value);
+            }
+        }
+    }
+    
+    public YogaAlign AlignSelf {
+        get {
+            unsafe {
+                return (YogaAlign) YogaInterop.YGNodeStyleGetAlignSelf(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetAlignSelf(RawPointer, (YGAlign)value);
+            }
+        }
+    }
+    
+    public YogaWrap FlexWrap {
+        get {
+            unsafe {
+                return (YogaWrap) YogaInterop.YGNodeStyleGetFlexWrap(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetFlexWrap(RawPointer, (YGWrap)value);
+            }
+        }
+    }
+    
+    public YogaOverflow Overflow {
+        get {
+            unsafe {
+                return (YogaOverflow) YogaInterop.YGNodeStyleGetOverflow(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetOverflow(RawPointer, (YGOverflow)value);
+            }
+        }
+    }
+    
+    public YogaDisplay Display {
+        get {
+            unsafe {
+                return (YogaDisplay) YogaInterop.YGNodeStyleGetDisplay(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetDisplay(RawPointer, (YGDisplay)value);
+            }
+        }
+    }
+    
+    public float Flex {
+        get {
+            unsafe {
+                return YogaInterop.YGNodeStyleGetFlex(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetFlex(RawPointer, value);
+            }
+        }
+    }
+    
+    public float FlexGrow {
+        get {
+            unsafe {
+                return YogaInterop.YGNodeStyleGetFlexGrow(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetFlexGrow(RawPointer, value);
+            }
+        }
+    }
+    
+    public float FlexShrink {
+        get {
+            unsafe {
+                return YogaInterop.YGNodeStyleGetFlexShrink(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetFlexShrink(RawPointer, value);
+            }
         }
     }
 }

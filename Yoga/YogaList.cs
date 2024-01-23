@@ -19,11 +19,11 @@ public class YogaNodeList : ICollection {
     }
 
     public void Add(YogaNode node) {
-        _node._owner = node;
         Insert(Count, node);
     }
 
     public void Insert(int index, YogaNode node) {
+        _node._owner = node;
         _array.Insert(index, node);
         unsafe {
             YogaInterop.YGNodeInsertChild(_pointer, node.RawPointer, new((uint)index));
@@ -31,13 +31,33 @@ public class YogaNodeList : ICollection {
     }
 
     public void Remove(YogaNode node) {
+        _node._owner = null;
         _array.Remove(node);
         unsafe {
             YogaInterop.YGNodeRemoveChild(_pointer, node.RawPointer);
         }
     }
+    
+    public void Clear() {
+        foreach (var node in _array) {
+            _node._owner = null;
+        }
+        _array.Clear();
+        unsafe {
+            YogaInterop.YGNodeRemoveAllChildren(_pointer);
+        }
+    }
+
+    public void Set(IEnumerable<YogaNode> nodes) {
+        Clear();
+        foreach (var node in nodes) {
+            Add(node);
+        }
+    }
 
     internal void Swap(int index, YogaNode node) {
+        _array[index]._owner = null;
+        _node._owner = node;
         _array[index] = node;
         unsafe {
             YogaInterop.YGNodeSwapChild(_pointer, node.RawPointer, new((uint)index));
