@@ -15,6 +15,7 @@ include(${YOGA_ROOT}/cmake/project-defaults.cmake)
 file(GLOB SOURCES CONFIGURE_DEPENDS
     ${YOGA_ROOT}/yoga/*.cpp
     ${YOGA_ROOT}/yoga/**/*.cpp)
+    
 
 add_library(yoga SHARED ${SOURCES})
 
@@ -36,3 +37,7 @@ target_include_directories(yoga
 
 set_target_properties(yoga PROPERTIES PREFIX "")
 target_compile_options(yoga PRIVATE -static)
+
+target_compile_definitions(yoga PRIVATE
+  $<$<CONFIG:Debug>:DEBUG=1>
+)

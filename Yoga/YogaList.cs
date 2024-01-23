@@ -5,12 +5,13 @@ using Yoga.Interop;
 namespace Yoga; 
 
 public class YogaNodeList : ICollection {
-    private unsafe void* _pointer;
+    private YogaNode _node;
+    private unsafe void* _pointer => _node.RawPointer;
 
     private List<YogaNode> _array = new();
 
-    internal unsafe YogaNodeList(void* yogaNode) {
-        _pointer = yogaNode;
+    internal YogaNodeList(YogaNode node) {
+        _node = node;
     }
 
     internal YogaNode Get(int index) {
@@ -18,6 +19,7 @@ public class YogaNodeList : ICollection {
     }
 
     public void Add(YogaNode node) {
+        _node._owner = node;
         Insert(Count, node);
     }
 

@@ -4,14 +4,18 @@ namespace Yoga.Tests.Visual;
 
 public static class Extensions {
     public static void DrawBorder(this YogaNode node, Color color) {
-        var borderTop = node.StyleGetBorder(YogaEdge.Top);
-        var borderBottom = node.StyleGetBorder(YogaEdge.Bottom);
-        var borderRight = node.StyleGetBorder(YogaEdge.Right);
-        var borderLeft = node.StyleGetBorder(YogaEdge.Left);
+        var borderTop = node.GetBorder(YogaEdge.Top);
+        var borderBottom = node.GetBorder(YogaEdge.Bottom);
+        var borderRight = node.GetBorder(YogaEdge.Right);
+        var borderLeft = node.GetBorder(YogaEdge.Left);
         
-        Raylib.DrawRectangleRec(new Rectangle(node.Left, node.Right-borderTop, node.Width, borderTop), color);
-        Raylib.DrawRectangleRec(new Rectangle(node.Left, node.Bottom, node.Width, borderBottom), color);
-        Raylib.DrawRectangleRec(new Rectangle(node.Left, node.Right, borderLeft, node.Height), color);
-        Raylib.DrawRectangleRec(new Rectangle(node.Right-borderRight, node.Right, borderRight, node.Height), color);
+        //Top
+        Raylib.DrawRectangleRec(new Rectangle(node.Left, node.Top, node.Width, borderTop), color);
+        //Left
+        Raylib.DrawRectangleRec(new Rectangle(node.Left, node.Top, borderLeft, node.Height), color);
+        //Right
+        Raylib.DrawRectangleRec(new Rectangle(node.Left+node.Width-borderRight, node.Top, borderRight, node.Height), color);
+        //Bottom
+        Raylib.DrawRectangleRec(new Rectangle(node.Left, node.Top+node.Height-borderBottom, node.Width, borderBottom), color);
     }
 }

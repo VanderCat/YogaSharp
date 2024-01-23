@@ -1,25 +1,47 @@
+using Yoga.Interop;
 using ZeroElectric.Vinculum;
 
 namespace Yoga.Tests.Visual; 
 
 public class TestLayout : IScene {
-    private YogaNode _rootNode = new YogaNode();
+    private YogaNode _rootNode;
     public void Draw() {
         _rootNode.DrawBorder(Raylib.WHITE);
+        foreach (var child in _rootNode.Children) {
+            child.DrawBorder(Raylib.GOLD);
+        }
     }
 
     public void Update() {
-        
+        if (_rootNode.IsDirty) {
+            _rootNode.CalculateLayout();
+        }
     }
 
     public void Init() {
-        _rootNode.Width = 512;//Raylib.GetRenderWidth();
-        _rootNode.Height = 512;//Raylib.GetRenderHeight();
-        _rootNode.FlexDirection = YogaFlexDirection.Column;
-        _rootNode.StyleSetBorder(YogaEdge.All, 64);
-        var extraNode = new YogaNode();
-        extraNode.Width = 100;
-        extraNode.Height = 200;
-        _rootNode.Children.Add(extraNode);
+        _rootNode = new YogaNode {
+            Width = Raylib.GetRenderWidth(),
+            Height = Raylib.GetRenderHeight(),
+            FlexDirection = YogaFlexDirection.Column
+        };
+        _rootNode.StyleSetBorder(YogaEdge.All, 1);
+        
+        var extraNode = new YogaNode {
+            Owner = _rootNode
+        };
+        extraNode.StyleSetWidthPercent(75);
+        extraNode.StyleSetHeightPercent(100);
+        extraNode.StyleSetBorder(YogaEdge.All, 4);
+
+        var funnyNode = new YogaNode {
+            Width = 400,
+            Height = 200,
+            Owner = extraNode
+        };
+        funnyNode.StyleSetBorder(YogaEdge.All, 4);
+        _rootNode.CalculateLayout();
+
+        _rootNode.Print(YogaPrintOptions.Children);
+        funnyNode.Print(YogaPrintOptions.Layout);
     }
 }
