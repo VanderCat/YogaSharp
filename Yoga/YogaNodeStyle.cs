@@ -262,4 +262,101 @@ public partial class YogaNode {
             }
         }
     }
+    
+    public YogaGutter StyleGetGap(YogaGutter gutter = YogaGutter.All) {
+        unsafe {
+            return (YogaGutter)YogaInterop.YGNodeStyleGetGap(RawPointer, (YGGutter)gutter);
+        }
+    }
+    
+    public void StyleSetGap(float gapLength, YogaGutter gutter = YogaGutter.All) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetGap(RawPointer, (YGGutter)gutter, gapLength);
+        }
+    }
+
+    public YogaValue StyleGetMinWidth() {
+        unsafe {
+            return YogaInterop.YGNodeStyleGetMinWidth(RawPointer).ToYogaValue();
+        }
+    }
+    
+    public void StyleSetMinHeight(float minHeight) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetMinHeight(RawPointer, minHeight);
+        }
+    }
+    
+    public void StyleSetMinHeightPercent(float minHeightPercent) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetMinWidthPercent(RawPointer, minHeightPercent);
+        }
+    }
+    
+    public YogaValue StyleGetMinHeight() {
+        unsafe {
+            return YogaInterop.YGNodeStyleGetMinHeight(RawPointer).ToYogaValue();
+        }
+    }
+    
+    public void StyleSetMinWidth(float minWidth) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetMinWidth(RawPointer, minWidth);
+        }
+    }
+    
+    public void StyleSetMinWidthPercent(float minWidthPercent) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetMinWidthPercent(RawPointer, minWidthPercent);
+        }
+    }
+    
+    public YogaValue StyleGetMaxWidth() {
+        unsafe {
+            return YogaInterop.YGNodeStyleGetMaxWidth(RawPointer).ToYogaValue();
+        }
+    }
+    
+    public void StyleSetMaxHeight(float minHeight) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetMaxHeight(RawPointer, minHeight);
+        }
+    }
+    
+    public void StyleSetMaxHeightPercent(float minHeightPercent) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetMaxWidthPercent(RawPointer, minHeightPercent);
+        }
+    }
+    
+    public YogaValue StyleGetMaxHeight() {
+        unsafe {
+            return YogaInterop.YGNodeStyleGetMaxHeight(RawPointer).ToYogaValue();
+        }
+    }
+    
+    public void StyleSetMaxWidth(float minWidth) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetMaxWidth(RawPointer, minWidth);
+        }
+    }
+    
+    public void StyleSetMaxWidthPercent(float minWidthPercent) {
+        unsafe {
+            YogaInterop.YGNodeStyleSetMaxWidthPercent(RawPointer, minWidthPercent);
+        }
+    }
+
+    public float AspectRatio {
+        get {
+            unsafe {
+                return YogaInterop.YGNodeStyleGetAspectRatio(RawPointer);
+            }
+        }
+        set {
+            unsafe {
+                YogaInterop.YGNodeStyleSetAspectRatio(RawPointer, value);
+            }
+        }
+    }
 }
