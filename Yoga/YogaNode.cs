@@ -21,7 +21,11 @@ public partial class YogaNode : YogaBase {
         }
     }
 
-    internal YogaNode? _owner;
+    private YogaNode? _owner;
+
+    internal void SetParent(YogaNode? parent = null) {
+        _owner = parent;
+    }
 
     public YogaNode? Parent {
         get => _owner;
