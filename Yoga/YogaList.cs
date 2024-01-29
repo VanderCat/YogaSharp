@@ -26,7 +26,7 @@ public class YogaNodeList : ICollection {
         _node.SetParent(node);
         _array.Insert(index, node);
         unsafe {
-            YogaInterop.YGNodeInsertChild(_pointer, node.RawPointer, new((uint)index));
+            YogaInterop.YGNodeInsertChild(_pointer, node.RawPointer, (nuint)index);
         }
     }
 
@@ -60,7 +60,7 @@ public class YogaNodeList : ICollection {
         _node.SetParent(node);
         _array[index] = node;
         unsafe {
-            YogaInterop.YGNodeSwapChild(_pointer, node.RawPointer, new((uint)index));
+            YogaInterop.YGNodeSwapChild(_pointer, node.RawPointer, (nuint)index);
         }
     }
     

@@ -1,3 +1,3 @@
 using System.Runtime.CompilerServices;
 
-[assembly: DisableRuntimeMarshalling]
+//[assembly: DisableRuntimeMarshalling]

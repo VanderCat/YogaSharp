@@ -1,11 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AssemblyName>YogaSharp</AssemblyName>
+        <PackageId>Yoga</PackageId>
+        <Version>0.1.1-alpha</Version>
+        <Authors>VanderCat</Authors>
+        <Company>VanderCat</Company>
+        <PackageTags>Layout Engine;Layout;Yoga</PackageTags>
+        <LangVersion>latest</LangVersion>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>

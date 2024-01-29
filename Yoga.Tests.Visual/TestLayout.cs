@@ -7,9 +7,6 @@ public class TestLayout : IScene {
     private YogaNode _rootNode;
     public void Draw() {
         _rootNode.DrawBorder(Raylib.WHITE);
-        foreach (var child in _rootNode.Children) {
-            child.DrawBorder(Raylib.GOLD);
-        }
     }
 
     public void Update() {
@@ -25,23 +22,46 @@ public class TestLayout : IScene {
             FlexDirection = YogaFlexDirection.Column
         };
         _rootNode.StyleSetBorder(YogaEdge.All, 1);
+        _rootNode.AlignItems = YogaAlign.Center;
         
-        var extraNode = new YogaNode {
-            Parent = _rootNode
+        var mainNode = new YogaNode {
+            Parent = _rootNode,
+            FlexDirection = YogaFlexDirection.Row
         };
-        extraNode.StyleSetWidthPercent(75);
-        extraNode.StyleSetHeightPercent(100);
-        extraNode.StyleSetBorder(YogaEdge.All, 4);
+        mainNode.StyleSetWidthPercent(75);
+        mainNode.StyleSetHeightPercent(100);
+        mainNode.StyleSetBorder(YogaEdge.All, 1);
+        mainNode.StyleSetPadding(YogaEdge.All, 8);
+        mainNode.StyleSetGap(16);
+        
+        var LeftNode = new YogaNode {
+            Parent = mainNode,
+            FlexShrink = 1
+        };
+        var RightNode = new YogaNode {
+            Parent = mainNode,
+            FlexShrink = 1,
+            Width = 256f
+        };
+        RightNode.StyleSetHeightPercent(100f);
 
-        var funnyNode = new YogaNode {
-            Width = 400,
-            Height = 200,
-            Parent = extraNode
+        var vidNode = new YogaNode {
+            Parent = LeftNode,
+            AspectRatio = 1.77f,
+            FlexShrink = 1
         };
-        funnyNode.StyleSetBorder(YogaEdge.All, 4);
+        vidNode.StyleSetWidthPercent(100f);
+        vidNode.StyleSetBorder(YogaEdge.All, 1);
         _rootNode.CalculateLayout();
 
         _rootNode.Print(YogaPrintOptions.Children);
-        funnyNode.Print(YogaPrintOptions.Layout);
+        vidNode.Print(YogaPrintOptions.Layout);
+        
+        //var textNode = new TextNode {
+        //    Parent = vidNode,
+        //    Text = "omg hi!!!"
+        //};
+
+        //var vidSuggestion = new YogaNode() { };
     }
 }

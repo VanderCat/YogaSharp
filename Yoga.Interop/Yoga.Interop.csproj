@@ -1,9 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <PackageId>Yoga.Interop</PackageId>
+        <Version>2.0.1</Version>
+        <Authors>VanderCat</Authors>
+        <PackageTags>Layout Engine;Layout;Yoga;Bindings;Interop</PackageTags>
+        <LangVersion>latest</LangVersion>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <dependencies>
+            <dependency id="MyCompany.MyProduct.Common" version="$(Version)" />
+            <dependency id="MyCompany.MyProduct.Server" version="$(Version)" />
+        </dependencies>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -14,16 +24,19 @@
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     
-    <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+    <ItemGroup Condition="Exists('../YogaCpp/build/yoga.dll')">
         <Content Include="../YogaCpp/build/yoga.dll">
+            <PackagePath>lib/runtimes/win-x64/native/yoga.dll</PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Pack>false</Pack>
+            <Pack>true</Pack>
         </Content>
     </ItemGroup>
-    <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
+    
+    <ItemGroup Condition="Exists('../YogaCpp/build/libyoga.so')">
         <Content Include="../YogaCpp/build/libyoga.so">
+            <PackagePath>lib/runtimes/linux-x64/native/libyoga.so</PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Pack>false</Pack>
+            <Pack>true</Pack>
         </Content>
     </ItemGroup>
 
