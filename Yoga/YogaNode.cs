@@ -20,6 +20,13 @@ public partial class YogaNode : YogaBase {
             }
         }
     }
+    
+    public unsafe object? UserData {
+        get => __USERDATA_CACHE.TryGetValue((nint)RawPointer, out var result) ? result : null;
+        set => __USERDATA_CACHE[(nint)RawPointer] = value;
+    }
+    
+    internal static Dictionary<nint, object?> __USERDATA_CACHE = new();
 
     private YogaNode? _owner;
 
@@ -90,7 +97,8 @@ public partial class YogaNode : YogaBase {
 
     public YogaNodeList Children { get; }
 
-    ~YogaNode() {
+    unsafe ~YogaNode() {
+        __USERDATA_CACHE.Remove((nint) RawPointer);
         NodeFinalize(); //idk? what should i use here? finalizer? just straight up free?
     }
 
