@@ -2,11 +2,11 @@
 
 namespace Yoga; 
 
-public partial class YogaNode {
-    public YogaPositionType PositionType {
+public partial class Node {
+    public PositionType PositionType {
         get {
             unsafe {
-                return (YogaPositionType)YogaInterop.YGNodeStyleGetPositionType(RawPointer);
+                return (PositionType)YogaInterop.YGNodeStyleGetPositionType(RawPointer);
             }
         }
         set {
@@ -16,10 +16,10 @@ public partial class YogaNode {
         }
     }
 
-    public YogaFlexDirection FlexDirection {
+    public FlexDirection FlexDirection {
         get {
             unsafe {
-                return (YogaFlexDirection) YogaInterop.YGNodeStyleGetFlexDirection(RawPointer);
+                return (FlexDirection) YogaInterop.YGNodeStyleGetFlexDirection(RawPointer);
             }
         }
         set {
@@ -29,10 +29,10 @@ public partial class YogaNode {
         }
     }
 
-    public YogaAlign AlignItems {
+    public Align AlignItems {
         get {
             unsafe {
-                return (YogaAlign)YogaInterop.YGNodeStyleGetAlignItems(RawPointer);
+                return (Align)YogaInterop.YGNodeStyleGetAlignItems(RawPointer);
             }
         }
         set {
@@ -42,63 +42,63 @@ public partial class YogaNode {
         }
     }
     
-    public YogaValue StyleGetPosition(YogaEdge edge) {
+    public YogaValue StyleGetPosition(Edge edge) {
         unsafe {
             return YogaInterop.YGNodeStyleGetPosition(RawPointer, (YGEdge)edge).ToYogaValue();
         }
     }
-    public void StyleSetPosition(YogaEdge edge, float position) {
+    public void StyleSetPosition(Edge edge, float position) {
         unsafe {
             YogaInterop.YGNodeStyleSetPosition(RawPointer, (YGEdge)edge, position);
         }
     }
-    public void StyleSetPositionPercent(YogaEdge edge, float position) {
+    public void StyleSetPositionPercent(Edge edge, float position) {
         unsafe {
             YogaInterop.YGNodeStyleSetPositionPercent(RawPointer, (YGEdge)edge, position);
         }
     }
     
-    public YogaValue StyleGetMargin(YogaEdge edge) {
+    public YogaValue StyleGetMargin(Edge edge) {
         unsafe {
             return YogaInterop.YGNodeStyleGetMargin(RawPointer, (YGEdge)edge).ToYogaValue();
         }
     }
-    public void StyleSetMargin(YogaEdge edge, float margin) {
+    public void StyleSetMargin(Edge edge, float margin) {
         unsafe {
             YogaInterop.YGNodeStyleSetMargin(RawPointer, (YGEdge)edge, margin);
         }
     }
-    public void StyleSetMarginAuto(YogaEdge edge) {
+    public void StyleSetMarginAuto(Edge edge) {
         unsafe {
             YogaInterop.YGNodeStyleSetMarginAuto(RawPointer, (YGEdge)edge);
         }
     }
-    public void StyleSetMarginPercent(YogaEdge edge, float margin) {
+    public void StyleSetMarginPercent(Edge edge, float margin) {
         unsafe {
             YogaInterop.YGNodeStyleSetMarginPercent(RawPointer, (YGEdge)edge, margin);
         }
     }
-    public YogaValue StyleGetPadding(YogaEdge edge) {
+    public YogaValue StyleGetPadding(Edge edge) {
         unsafe {
             return YogaInterop.YGNodeStyleGetPadding(RawPointer, (YGEdge)edge).ToYogaValue();
         }
     }
-    public void StyleSetPadding(YogaEdge edge, float padding) {
+    public void StyleSetPadding(Edge edge, float padding) {
         unsafe {
             YogaInterop.YGNodeStyleSetPadding(RawPointer, (YGEdge)edge, padding);
         }
     }
-    public void StyleSetPaddingPercent(YogaEdge edge, float padding) {
+    public void StyleSetPaddingPercent(Edge edge, float padding) {
         unsafe {
             YogaInterop.YGNodeStyleSetPaddingPercent(RawPointer, (YGEdge)edge, padding);
         }
     }
-    public float StyleGetBorder(YogaEdge edge) {
+    public float StyleGetBorder(Edge edge) {
         unsafe {
             return YogaInterop.YGNodeStyleGetBorder(RawPointer, (YGEdge)edge);
         }
     }
-    public void StyleSetBorder(YogaEdge edge, float border) {
+    public void StyleSetBorder(Edge edge, float border) {
         unsafe {
             YogaInterop.YGNodeStyleSetBorder(RawPointer, (YGEdge)edge, border);
         }
@@ -134,22 +134,22 @@ public partial class YogaNode {
         }
     }
 
-    public void CopyStyleFrom(YogaNode node) {
+    public void CopyStyleFrom(Node node) {
         unsafe {
             YogaInterop.YGNodeCopyStyle(RawPointer, node.RawPointer);
         }
     }
 
-    public YogaDirection StyleGetDirection() {
+    public Direction StyleGetDirection() {
         unsafe {
-            return (YogaDirection)YogaInterop.YGNodeStyleGetDirection(RawPointer);
+            return (Direction)YogaInterop.YGNodeStyleGetDirection(RawPointer);
         }
     }
 
-    public YogaJustify JustifyContent {
+    public Justify JustifyContent {
         get {
             unsafe {
-                return (YogaJustify) YogaInterop.YGNodeStyleGetJustifyContent(RawPointer);
+                return (Justify) YogaInterop.YGNodeStyleGetJustifyContent(RawPointer);
             }
         }
         set {
@@ -159,10 +159,10 @@ public partial class YogaNode {
         }
     }
 
-    public YogaAlign AlignContent {
+    public Align AlignContent {
         get {
             unsafe {
-                return (YogaAlign) YogaInterop.YGNodeStyleGetAlignContent(RawPointer);
+                return (Align) YogaInterop.YGNodeStyleGetAlignContent(RawPointer);
             }
         }
         set {
@@ -172,10 +172,10 @@ public partial class YogaNode {
         }
     }
     
-    public YogaAlign AlignSelf {
+    public Align AlignSelf {
         get {
             unsafe {
-                return (YogaAlign) YogaInterop.YGNodeStyleGetAlignSelf(RawPointer);
+                return (Align) YogaInterop.YGNodeStyleGetAlignSelf(RawPointer);
             }
         }
         set {
@@ -185,10 +185,10 @@ public partial class YogaNode {
         }
     }
     
-    public YogaWrap FlexWrap {
+    public Wrap FlexWrap {
         get {
             unsafe {
-                return (YogaWrap) YogaInterop.YGNodeStyleGetFlexWrap(RawPointer);
+                return (Wrap) YogaInterop.YGNodeStyleGetFlexWrap(RawPointer);
             }
         }
         set {
@@ -198,10 +198,10 @@ public partial class YogaNode {
         }
     }
     
-    public YogaOverflow Overflow {
+    public Overflow Overflow {
         get {
             unsafe {
-                return (YogaOverflow) YogaInterop.YGNodeStyleGetOverflow(RawPointer);
+                return (Overflow) YogaInterop.YGNodeStyleGetOverflow(RawPointer);
             }
         }
         set {
@@ -211,10 +211,10 @@ public partial class YogaNode {
         }
     }
     
-    public YogaDisplay Display {
+    public Display Display {
         get {
             unsafe {
-                return (YogaDisplay) YogaInterop.YGNodeStyleGetDisplay(RawPointer);
+                return (Display) YogaInterop.YGNodeStyleGetDisplay(RawPointer);
             }
         }
         set {
@@ -263,13 +263,13 @@ public partial class YogaNode {
         }
     }
     
-    public YogaGutter StyleGetGap(YogaGutter gutter = YogaGutter.All) {
+    public Gutter StyleGetGap(Gutter gutter = Gutter.All) {
         unsafe {
-            return (YogaGutter)YogaInterop.YGNodeStyleGetGap(RawPointer, (YGGutter)gutter);
+            return (Gutter)YogaInterop.YGNodeStyleGetGap(RawPointer, (YGGutter)gutter);
         }
     }
     
-    public void StyleSetGap(float gapLength, YogaGutter gutter = YogaGutter.All) {
+    public void StyleSetGap(float gapLength, Gutter gutter = Gutter.All) {
         unsafe {
             YogaInterop.YGNodeStyleSetGap(RawPointer, (YGGutter)gutter, gapLength);
         }

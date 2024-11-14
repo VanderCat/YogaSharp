@@ -2,7 +2,7 @@
 
 namespace Yoga; 
 
-public enum YogaLogLevel {
+public enum LogLevel {
     Debug = YGLogLevel.YGLogLevelDebug,
     Error = YGLogLevel.YGLogLevelError,
     Fatal = YGLogLevel.YGLogLevelFatal,

@@ -4,25 +4,25 @@ using Yoga.Interop;
 
 namespace Yoga; 
 
-public class YogaNodeList : ICollection {
-    private YogaNode _node;
+public class NodeList : ICollection {
+    private Node _node;
     private unsafe void* _pointer => _node.RawPointer;
 
-    private List<YogaNode> _array = new();
+    private List<Node> _array = new();
 
-    internal YogaNodeList(YogaNode node) {
+    internal NodeList(Node node) {
         _node = node;
     }
 
-    internal YogaNode Get(int index) {
+    internal Node Get(int index) {
         return _array[index];
     }
 
-    public void Add(YogaNode node) {
+    public void Add(Node node) {
         Insert(Count, node);
     }
 
-    public void Insert(int index, YogaNode node) {
+    public void Insert(int index, Node node) {
         _node.SetParent(node);
         _array.Insert(index, node);
         unsafe {
@@ -30,7 +30,7 @@ public class YogaNodeList : ICollection {
         }
     }
 
-    public void Remove(YogaNode node) {
+    public void Remove(Node node) {
         _node.SetParent();
         _array.Remove(node);
         unsafe {
@@ -48,14 +48,14 @@ public class YogaNodeList : ICollection {
         }
     }
 
-    public void Set(IEnumerable<YogaNode> nodes) {
+    public void Set(IEnumerable<Node> nodes) {
         Clear();
         foreach (var node in nodes) {
             Add(node);
         }
     }
 
-    internal void Swap(int index, YogaNode node) {
+    internal void Swap(int index, Node node) {
         _array[index].SetParent();
         _node.SetParent(node);
         _array[index] = node;
@@ -65,13 +65,13 @@ public class YogaNodeList : ICollection {
     }
     
 
-    public YogaNode this[int index] {
+    public Node this[int index] {
         get => Get(index);
         set => Swap(index, value);
     }
 
 
-    public IEnumerator<YogaNode> GetEnumerator() {
+    public IEnumerator<Node> GetEnumerator() {
         return new YogaListEnumerator(this);
     }
 
@@ -80,7 +80,7 @@ public class YogaNodeList : ICollection {
     }
 
     public void CopyTo(Array array, int index = 0) {
-        foreach (YogaNode child in this) {
+        foreach (Node child in this) {
             array.SetValue(child, index++);
         }
     }
@@ -97,7 +97,7 @@ public class YogaNodeList : ICollection {
     public object SyncRoot => this;
 }
 
-internal class YogaListEnumerator : IEnumerator<YogaNode> {
+internal class YogaListEnumerator : IEnumerator<Node> {
 
     public bool MoveNext() {
         if (_cursor < _nodeList.Count)
@@ -110,13 +110,13 @@ internal class YogaListEnumerator : IEnumerator<YogaNode> {
     }
 
     private int _cursor = -1;
-    private YogaNodeList _nodeList;
+    private NodeList _nodeList;
 
-    public YogaListEnumerator(YogaNodeList yogaNodeList) {
-        _nodeList = yogaNodeList;
+    public YogaListEnumerator(NodeList nodeList) {
+        _nodeList = nodeList;
     }
 
-    public YogaNode Current => _nodeList[_cursor];
+    public Node Current => _nodeList[_cursor];
 
     object IEnumerator.Current => Current;
     

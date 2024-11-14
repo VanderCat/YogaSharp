@@ -2,7 +2,7 @@
 
 namespace Yoga; 
 
-public enum YogaJustify {
+public enum Justify {
     Center = YGJustify.YGJustifyCenter,
     End = YGJustify.YGJustifyFlexEnd,
     FlexStart = YGJustify.YGJustifyFlexStart,

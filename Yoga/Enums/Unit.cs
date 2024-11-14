@@ -2,7 +2,7 @@ using Yoga.Interop;
 
 namespace Yoga; 
 
-public enum YogaUnit {
+public enum Unit {
     Percent = YGUnit.YGUnitPercent,
     Auto = YGUnit.YGUnitAuto,
     Point = YGUnit.YGUnitPoint,

@@ -2,7 +2,7 @@
 
 namespace Yoga; 
 
-public enum YogaOverflow {
+public enum Overflow {
     Hidden = YGOverflow.YGOverflowHidden,
     Scroll = YGOverflow.YGOverflowScroll,
     Visible = YGOverflow.YGOverflowVisible

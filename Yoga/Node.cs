@@ -7,7 +7,7 @@ using Yoga.Interop;
 
 namespace Yoga;
 
-public partial class YogaNode : YogaBase {
+public partial class Node : YogaBase {
     private YogaConfig? _config;
 
     public YogaConfig? Config {
@@ -28,13 +28,13 @@ public partial class YogaNode : YogaBase {
     
     internal static Dictionary<nint, object?> __USERDATA_CACHE = new();
 
-    private YogaNode? _owner;
+    private Node? _owner;
 
-    internal void SetParent(YogaNode? parent = null) {
+    internal void SetParent(Node? parent = null) {
         _owner = parent;
     }
 
-    public YogaNode? Parent {
+    public Node? Parent {
         get => _owner;
         set {
             if (value is not null)
@@ -70,7 +70,7 @@ public partial class YogaNode : YogaBase {
         }
     }
 
-    public delegate void DirtiedFunction(YogaNode node);
+    public delegate void DirtiedFunction(Node node);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private unsafe delegate void DirtiedFunctionUnmanaged(void* node);
@@ -95,9 +95,9 @@ public partial class YogaNode : YogaBase {
         }
     }
 
-    public YogaNodeList Children { get; }
+    public NodeList Children { get; }
 
-    unsafe ~YogaNode() {
+    unsafe ~Node() {
         __USERDATA_CACHE.Remove((nint) RawPointer);
         NodeFinalize(); //idk? what should i use here? finalizer? just straight up free?
     }
@@ -111,32 +111,32 @@ public partial class YogaNode : YogaBase {
 #pragma warning restore CS8500
     }
 
-    public unsafe YogaNode(void* rawPointer) : base(rawPointer) {
-        Children = new YogaNodeList(this);
+    public unsafe Node(void* rawPointer) : base(rawPointer) {
+        Children = new NodeList(this);
         //AddDirtiedFunc();
     }
 
-    public YogaNode() {
+    public Node() {
         unsafe {
             RawPointer = YogaInterop.YGNodeNew();
         }
 
-        Children = new YogaNodeList(this);
+        Children = new NodeList(this);
         //AddDirtiedFunc();
     }
 
-    public YogaNode(YogaConfig config) {
+    public Node(YogaConfig config) {
         unsafe {
             RawPointer = YogaInterop.YGNodeNewWithConfig(config.RawPointer);
         }
 
-        Children = new YogaNodeList(this);
+        Children = new NodeList(this);
         //AddDirtiedFunc();
     }
 
-    public YogaNode Clone() {
+    public Node Clone() {
         unsafe {
-            var cloned = new YogaNode(YogaInterop.YGNodeClone(RawPointer)) {
+            var cloned = new Node(YogaInterop.YGNodeClone(RawPointer)) {
                 _config = _config
             };
             return cloned;
@@ -145,7 +145,7 @@ public partial class YogaNode : YogaBase {
 
 #if DEBUG
     // YGNodePrint only exist in debug builds of yoga
-    public void Print(YogaPrintOptions printOptions) {
+    public void Print(PrintOptions printOptions) {
         unsafe {
             YogaInterop.YGNodePrint(RawPointer, (YGPrintOptions) printOptions);
         }
@@ -159,9 +159,9 @@ public partial class YogaNode : YogaBase {
     }
 
     public void CalculateLayout(float width = Undefined, float height = Undefined,
-        YogaDirection yogaDirection = YogaDirection.Inherit) {
+        Direction direction = Direction.Inherit) {
         unsafe {
-            YogaInterop.YGNodeCalculateLayout(RawPointer, width, height, (YGDirection) yogaDirection);
+            YogaInterop.YGNodeCalculateLayout(RawPointer, width, height, (YGDirection) direction);
         }
     }
 
@@ -218,8 +218,8 @@ public partial class YogaNode : YogaBase {
         }
     }
 
-    public delegate Tuple<float, float> YogaMeasureFunction(YogaNode node, float width, YogaMeasureMode widthMode,
-        float height, YogaMeasureMode heightMode);
+    public delegate Tuple<float, float> YogaMeasureFunction(Node node, float width, MeasureMode widthMode,
+        float height, MeasureMode heightMode);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private unsafe delegate YGSize YGMeasureFunction(void* node, float width, YGMeasureMode widthMode, float height,
@@ -238,8 +238,8 @@ public partial class YogaNode : YogaBase {
                 }
 
                 YGMeasureFunction unmanaged = (node, width, mode, height, heightMode) => {
-                    var result = _measureFunction.Invoke(this, width, (YogaMeasureMode) mode, height,
-                        (YogaMeasureMode) heightMode);
+                    var result = _measureFunction.Invoke(this, width, (MeasureMode) mode, height,
+                        (MeasureMode) heightMode);
                     return new YGSize() {
                         width = result.Item1,
                         height = result.Item2
@@ -254,7 +254,7 @@ public partial class YogaNode : YogaBase {
         }
     }
 
-    public delegate float YogaBaselineFunction(YogaNode node, float width, float height);
+    public delegate float YogaBaselineFunction(Node node, float width, float height);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private unsafe delegate float YGBaselineFunc(void* node, float width, float height);
@@ -281,10 +281,10 @@ public partial class YogaNode : YogaBase {
         }
     }
 
-    public YogaNodeType Type {
+    public NodeType Type {
         get {
             unsafe {
-                return (YogaNodeType)YogaInterop.YGNodeGetNodeType(RawPointer);
+                return (NodeType)YogaInterop.YGNodeGetNodeType(RawPointer);
             }
         }
         set {

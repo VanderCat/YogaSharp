@@ -4,11 +4,11 @@ using ZeroElectric.Vinculum;
 namespace Yoga.Tests.Visual; 
 
 public static class Extensions {
-    public static void DrawBorder(this YogaNode node, Color color, float offsetX = 0, float offsetY = 0) {
-        var borderTop = node.GetBorder(YogaEdge.Top);
-        var borderBottom = node.GetBorder(YogaEdge.Bottom);
-        var borderRight = node.GetBorder(YogaEdge.Right);
-        var borderLeft = node.GetBorder(YogaEdge.Left);
+    public static void DrawBorder(this Node node, Color color, float offsetX = 0, float offsetY = 0) {
+        var borderTop = node.GetBorder(Edge.Top);
+        var borderBottom = node.GetBorder(Edge.Bottom);
+        var borderRight = node.GetBorder(Edge.Right);
+        var borderLeft = node.GetBorder(Edge.Left);
         
         //Top
         Raylib.DrawRectangleRec(new Rectangle(node.Left+offsetX, node.Top+offsetY, node.Width, borderTop), color);
@@ -19,7 +19,7 @@ public static class Extensions {
         //Bottom
         Raylib.DrawRectangleRec(new Rectangle(node.Left+offsetX, node.Top+node.Height-borderBottom+offsetY, node.Width, borderBottom), color);
         foreach (var child in node.Children) {
-            if (child.Type == YogaNodeType.Default)
+            if (child.Type == NodeType.Default)
                 child.DrawBorder(Raylib.ColorAlpha(color, 0.99f), offsetX+node.Left, offsetY+node.Top);
             else
                 ((TextNode)child).Draw(new Vector2(offsetX+node.Left, offsetY+node.Top));

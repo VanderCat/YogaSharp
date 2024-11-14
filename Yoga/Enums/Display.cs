@@ -2,7 +2,7 @@
 
 namespace Yoga; 
 
-public enum YogaDisplay {
+public enum Display {
     Flex = YGDisplay.YGDisplayFlex,
     None = YGDisplay.YGDisplayNone
 }

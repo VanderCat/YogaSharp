@@ -2,7 +2,7 @@ using Yoga.Interop;
 
 namespace Yoga; 
 
-public enum YogaEdge {
+public enum Edge {
     All = YGEdge.YGEdgeAll,
     Bottom = YGEdge.YGEdgeBottom,
     End = YGEdge.YGEdgeEnd,

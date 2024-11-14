@@ -3,7 +3,7 @@ using ZeroElectric.Vinculum;
 
 namespace Yoga.Tests.Visual; 
 
-public class TextNode : YogaNode {
+public class TextNode : Node {
     private string _text = "";
     public string Text {
         get => _text;
@@ -43,7 +43,7 @@ public class TextNode : YogaNode {
     public TextNode() : this(YogaConfig.Default) {
     }
     public TextNode(YogaConfig config) : base(config) {
-        Type = YogaNodeType.Text;
+        Type = NodeType.Text;
         MeasureFunction = TextMeasureFunction;
     }
 
@@ -73,8 +73,8 @@ public class TextNode : YogaNode {
         return Raylib.MeasureTextEx(Font, _wrappedText, FontSize, FontSpacing);
     }
 
-    Tuple<float, float> TextMeasureFunction(YogaNode node, float width, YogaMeasureMode widthMode,
-        float height, YogaMeasureMode heightMode) {
+    Tuple<float, float> TextMeasureFunction(Node node, float width, MeasureMode widthMode,
+        float height, MeasureMode heightMode) {
         var measurement = CalculateWrappedText(width);
 
         return new Tuple<float, float>(width, measurement.Y);

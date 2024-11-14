@@ -2,7 +2,7 @@
 
 namespace Yoga; 
 
-public enum YogaAlign {
+public enum Align {
     Auto = YGAlign.YGAlignAuto,
     Baseline = YGAlign.YGAlignBaseline,
     Center = YGAlign.YGAlignCenter,

@@ -2,7 +2,7 @@
 
 namespace Yoga; 
 
-public enum YogaWrap {
+public enum Wrap {
     NoWrap = YGWrap.YGWrapNoWrap,
     Wrap = YGWrap.YGWrapWrap,
     WrapReverse = YGWrap.YGWrapWrapReverse

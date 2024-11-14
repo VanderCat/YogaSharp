@@ -2,7 +2,7 @@
 
 namespace Yoga; 
 
-public enum YogaNodeType {
+public enum NodeType {
     Default = YGNodeType.YGNodeTypeDefault,
     Text = YGNodeType.YGNodeTypeText
 }

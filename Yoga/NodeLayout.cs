@@ -2,7 +2,7 @@
 
 namespace Yoga; 
 
-public partial class YogaNode {
+public partial class Node {
     public float Width {
         get {
             unsafe {
@@ -61,10 +61,10 @@ public partial class YogaNode {
         }
     }
 
-    public YogaDirection Direction {
+    public Direction Direction {
         get {
             unsafe {
-                return (YogaDirection)YogaInterop.YGNodeLayoutGetDirection(RawPointer);
+                return (Direction)YogaInterop.YGNodeLayoutGetDirection(RawPointer);
             }
         }
         set {
@@ -82,19 +82,19 @@ public partial class YogaNode {
         }
     }
 
-    public float GetMargin(YogaEdge edge) {
+    public float GetMargin(Edge edge) {
         unsafe {
             return YogaInterop.YGNodeLayoutGetMargin(RawPointer, (YGEdge) edge);
         }
     }
     
-    public float GetBorder(YogaEdge edge) {
+    public float GetBorder(Edge edge) {
         unsafe {
             return YogaInterop.YGNodeLayoutGetBorder(RawPointer, (YGEdge)edge);
         }
     }
     
-    public float GetPadding(YogaEdge edge) {
+    public float GetPadding(Edge edge) {
         unsafe {
             return YogaInterop.YGNodeLayoutGetPadding(RawPointer, (YGEdge)edge);
         }

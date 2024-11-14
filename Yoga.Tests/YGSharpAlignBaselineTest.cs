@@ -14,47 +14,47 @@ public class YGSharpAlignBaselineTest {
     
     private YogaConfig YGConfig;
     
-    private YogaNode root;
+    private Node root;
     
-    private YogaNode child1;
-    private YogaNode child2;
+    private Node child1;
+    private Node child2;
 
-    private YogaNode child2_1;
-    private YogaNode child2_2;
+    private Node child2_1;
+    private Node child2_2;
     [SetUp]
     public void Setup() {
         YGConfig = new YogaConfig();
             
-        root = new YogaNode(YGConfig) {
+        root = new Node(YGConfig) {
             Height = 1000f,
             Width = 1000f,
-            FlexDirection = YogaFlexDirection.Row,
-            AlignItems = YogaAlign.Baseline
+            FlexDirection = FlexDirection.Row,
+            AlignItems = Align.Baseline
         };
             
-        child1 = new YogaNode(YGConfig) {
+        child1 = new Node(YGConfig) {
             Height = 500f,
             Width = 600f,
-            FlexDirection = YogaFlexDirection.Column
+            FlexDirection = FlexDirection.Column
         };
         root.Children.Add(child1);
         
-        child2 = new YogaNode(YGConfig) {
+        child2 = new Node(YGConfig) {
             Height = 500f,
             Width = 800f,
-            FlexDirection = YogaFlexDirection.Column
+            FlexDirection = FlexDirection.Column
         };
         
-        child2_1 = new YogaNode(YGConfig) {
+        child2_1 = new Node(YGConfig) {
             Height = 500f,
             Width = 300f,
-            FlexDirection = YogaFlexDirection.Column
+            FlexDirection = FlexDirection.Column
         };
         
-        child2_2 = new YogaNode(YGConfig) {
+        child2_2 = new Node(YGConfig) {
             Height = 500f,
             Width = 400f,
-            FlexDirection = YogaFlexDirection.Column
+            FlexDirection = FlexDirection.Column
         };
         
         root.Children.Add(child2);

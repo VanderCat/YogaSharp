@@ -2,7 +2,7 @@
 
 namespace Yoga; 
 
-public enum YogaMeasureMode {
+public enum MeasureMode {
     Exactly = YGMeasureMode.YGMeasureModeExactly,
     Undefined = YGMeasureMode.YGMeasureModeUndefined,
     AtMost = YGMeasureMode.YGMeasureModeAtMost

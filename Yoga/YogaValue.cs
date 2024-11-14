@@ -4,14 +4,14 @@ namespace Yoga;
 
 public struct YogaValue {
     public float Value;
-    public YogaUnit Unit;
+    public Unit Unit;
 
     public static implicit operator float(YogaValue v) => v.Value;
 
     internal static YogaValue FromYGValue(YGValue value) {
         return new YogaValue {
             Value = value.value,
-            Unit = (YogaUnit)value.unit
+            Unit = (Unit)value.unit
         };
     }
     
@@ -24,17 +24,17 @@ public struct YogaValue {
 
     public static readonly YogaValue Auto = new() {
         Value = 0,
-        Unit = YogaUnit.Auto
+        Unit = Unit.Auto
     };
 
     public static readonly YogaValue Undefined = new() {
         Value = Yoga.Undefined,
-        Unit = YogaUnit.Undefined
+        Unit = Unit.Undefined
     };
     
     public static readonly YogaValue Zero = new() {
         Value = 0,
-        Unit = YogaUnit.Point
+        Unit = Unit.Point
     };
 
 }

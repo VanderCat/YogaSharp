@@ -56,10 +56,10 @@ public class YogaConfig : YogaBase {
         }
     }
     
-    public YogaErrata Errata {
+    public Errata Errata {
         get {
             unsafe {
-                return (YogaErrata)YogaInterop.YGConfigGetErrata(RawPointer);
+                return (Errata)YogaInterop.YGConfigGetErrata(RawPointer);
             }
         }
         set {
@@ -112,7 +112,7 @@ public class YogaConfig : YogaBase {
         }
     }
     
-    public delegate int YogaLoggingFunction(YogaConfig config, IntPtr node, YogaLogLevel logLevel,
+    public delegate int YogaLoggingFunction(YogaConfig config, IntPtr node, LogLevel logLevel,
         string format, string[] args);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -131,7 +131,7 @@ public class YogaConfig : YogaBase {
                 }
 
                 YGLoggingFunction unmanaged = (config, node, logLevel, format, args) => {
-                    var result = _loggingFunction(this, new IntPtr(node), (YogaLogLevel)logLevel, format->ToString(), new[] {args->ToString()});
+                    var result = _loggingFunction(this, new IntPtr(node), (LogLevel)logLevel, format->ToString(), new[] {args->ToString()});
                     return result; //FIXME: how do we handle varargs?
                 };
 

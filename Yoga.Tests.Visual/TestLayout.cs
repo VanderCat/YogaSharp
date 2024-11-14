@@ -4,7 +4,7 @@ using ZeroElectric.Vinculum;
 namespace Yoga.Tests.Visual; 
 
 public class TestLayout : IScene {
-    private YogaNode _rootNode;
+    private Node _rootNode;
     public void Draw() {
         _rootNode.DrawBorder(Raylib.WHITE);
     }
@@ -16,46 +16,46 @@ public class TestLayout : IScene {
     }
 
     public void Init() {
-        _rootNode = new YogaNode {
+        _rootNode = new Node {
             Width = Raylib.GetRenderWidth(),
             Height = Raylib.GetRenderHeight(),
-            FlexDirection = YogaFlexDirection.Column
+            FlexDirection = FlexDirection.Column
         };
-        _rootNode.StyleSetBorder(YogaEdge.All, 1);
-        _rootNode.AlignItems = YogaAlign.Center;
+        _rootNode.StyleSetBorder(Edge.All, 1);
+        _rootNode.AlignItems = Align.Center;
         
-        var mainNode = new YogaNode {
+        var mainNode = new Node {
             Parent = _rootNode,
-            FlexDirection = YogaFlexDirection.Row
+            FlexDirection = FlexDirection.Row
         };
         mainNode.StyleSetWidthPercent(75);
         mainNode.StyleSetHeightPercent(100);
-        mainNode.StyleSetBorder(YogaEdge.All, 1);
-        mainNode.StyleSetPadding(YogaEdge.All, 8);
+        mainNode.StyleSetBorder(Edge.All, 1);
+        mainNode.StyleSetPadding(Edge.All, 8);
         mainNode.StyleSetGap(16);
         
-        var LeftNode = new YogaNode {
+        var LeftNode = new Node {
             Parent = mainNode,
             FlexShrink = 1
         };
-        var RightNode = new YogaNode {
+        var RightNode = new Node {
             Parent = mainNode,
             FlexShrink = 1,
             Width = 256f
         };
         RightNode.StyleSetHeightPercent(100f);
 
-        var vidNode = new YogaNode {
+        var vidNode = new Node {
             Parent = LeftNode,
             AspectRatio = 1.77f,
             FlexShrink = 1
         };
         vidNode.StyleSetWidthPercent(100f);
-        vidNode.StyleSetBorder(YogaEdge.All, 1);
+        vidNode.StyleSetBorder(Edge.All, 1);
         _rootNode.CalculateLayout();
 
-        _rootNode.Print(YogaPrintOptions.Children);
-        vidNode.Print(YogaPrintOptions.Layout);
+        _rootNode.Print(PrintOptions.Children);
+        vidNode.Print(PrintOptions.Layout);
         
         //var textNode = new TextNode {
         //    Parent = vidNode,

@@ -2,7 +2,7 @@ using Yoga.Interop;
 
 namespace Yoga; 
 
-public static class YogaExtensions {
+public static class Extensions {
     internal static YGValue ToYGValue(this YogaValue yogaValue) {
         return YogaValue.ToYGValue(yogaValue);
     }

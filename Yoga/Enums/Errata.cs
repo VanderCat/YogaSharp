@@ -3,7 +3,7 @@
 namespace Yoga; 
 
 [Flags]
-public enum YogaErrata {
+public enum Errata {
     All = YGErrata.YGErrataAll,
     Classic = YGErrata.YGErrataClassic,
     None = YGErrata.YGErrataNone,
