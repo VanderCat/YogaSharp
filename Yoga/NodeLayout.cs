@@ -2,101 +2,41 @@
 
 namespace Yoga; 
 
-public partial class Node {
+public unsafe partial class Node {
     public float Width {
-        get {
-            unsafe {
-                return YogaInterop.YGNodeLayoutGetWidth(RawPointer);
-            }
-        }
-        set {
-            unsafe {
-                YogaInterop.YGNodeStyleSetWidth(RawPointer, value);
-            }
-        }
+        get => YogaInterop.YGNodeLayoutGetWidth(this);
+        set => YogaInterop.YGNodeStyleSetWidth(this, value);
     }
     
     public float Height {
-        get {
-            unsafe {
-                return YogaInterop.YGNodeLayoutGetHeight(RawPointer);
-            }
-        }
-        set {
-            unsafe {
-                YogaInterop.YGNodeStyleSetHeight(RawPointer, value);
-            }
-        }
+        get => YogaInterop.YGNodeLayoutGetHeight(this);
+        set => YogaInterop.YGNodeStyleSetHeight(this, value);
     }
     
-    public float Left {
-        get {
-            unsafe {
-                return YogaInterop.YGNodeLayoutGetLeft(RawPointer);
-            }
-        }
-    }
-    
-    public float Top {
-        get {
-            unsafe {
-                return YogaInterop.YGNodeLayoutGetTop(RawPointer);
-            }
-        }
-    }
-    
-    public float Right {
-        get {
-            unsafe {
-                return YogaInterop.YGNodeLayoutGetRight(RawPointer);
-            }
-        }
-    }
-    
-    public float Bottom {
-        get {
-            unsafe {
-                return YogaInterop.YGNodeLayoutGetBottom(RawPointer);
-            }
-        }
-    }
+    public float Left => YogaInterop.YGNodeLayoutGetLeft(this);
+
+    public float Top => YogaInterop.YGNodeLayoutGetTop(this);
+
+    public float Right => YogaInterop.YGNodeLayoutGetRight(this);
+
+    public float Bottom => YogaInterop.YGNodeLayoutGetBottom(this);
 
     public Direction Direction {
-        get {
-            unsafe {
-                return (Direction)YogaInterop.YGNodeLayoutGetDirection(RawPointer);
-            }
-        }
-        set {
-            unsafe {
-                YogaInterop.YGNodeStyleSetDirection(RawPointer, (YGDirection)value);
-            }
-        }
+        get => (Direction)YogaInterop.YGNodeLayoutGetDirection(this);
+        set => YogaInterop.YGNodeStyleSetDirection(this, (YGDirection)value);
     }
     
-    public bool HadOverflow {
-        get {
-            unsafe {
-                return YogaInterop.YGNodeLayoutGetHadOverflow(RawPointer);
-            }
-        }
-    }
+    public bool HadOverflow => YogaInterop.YGNodeLayoutGetHadOverflow(this);
 
     public float GetMargin(Edge edge) {
-        unsafe {
-            return YogaInterop.YGNodeLayoutGetMargin(RawPointer, (YGEdge) edge);
-        }
+        return YogaInterop.YGNodeLayoutGetMargin(this, (YGEdge) edge);
     }
     
     public float GetBorder(Edge edge) {
-        unsafe {
-            return YogaInterop.YGNodeLayoutGetBorder(RawPointer, (YGEdge)edge);
-        }
+        return YogaInterop.YGNodeLayoutGetBorder(this, (YGEdge)edge);
     }
     
     public float GetPadding(Edge edge) {
-        unsafe {
-            return YogaInterop.YGNodeLayoutGetPadding(RawPointer, (YGEdge)edge);
-        }
+        return YogaInterop.YGNodeLayoutGetPadding(this, (YGEdge)edge);
     }
 }

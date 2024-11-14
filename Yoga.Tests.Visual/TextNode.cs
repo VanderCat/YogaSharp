@@ -1,5 +1,7 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 using ZeroElectric.Vinculum;
+using Color = ZeroElectric.Vinculum.Color;
 
 namespace Yoga.Tests.Visual; 
 
@@ -73,11 +75,11 @@ public class TextNode : Node {
         return Raylib.MeasureTextEx(Font, _wrappedText, FontSize, FontSpacing);
     }
 
-    Tuple<float, float> TextMeasureFunction(Node node, float width, MeasureMode widthMode,
+    SizeF TextMeasureFunction(Node node, float width, MeasureMode widthMode,
         float height, MeasureMode heightMode) {
         var measurement = CalculateWrappedText(width);
 
-        return new Tuple<float, float>(width, measurement.Y);
+        return new SizeF(width, measurement.Y);
     }
 
     public void Draw(Vector2 position) {

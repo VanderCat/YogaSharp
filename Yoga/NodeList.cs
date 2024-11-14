@@ -6,7 +6,6 @@ namespace Yoga;
 
 public class NodeList : ICollection {
     private Node _node;
-    private unsafe void* _pointer => _node.RawPointer;
 
     private List<Node> _array = new();
 
@@ -26,7 +25,7 @@ public class NodeList : ICollection {
         _node.SetParent(node);
         _array.Insert(index, node);
         unsafe {
-            YogaInterop.YGNodeInsertChild(_pointer, node.RawPointer, (nuint)index);
+            YogaInterop.YGNodeInsertChild(_node, node, (nuint)index);
         }
     }
 
@@ -34,7 +33,7 @@ public class NodeList : ICollection {
         _node.SetParent();
         _array.Remove(node);
         unsafe {
-            YogaInterop.YGNodeRemoveChild(_pointer, node.RawPointer);
+            YogaInterop.YGNodeRemoveChild(_node, node);
         }
     }
     
@@ -44,7 +43,7 @@ public class NodeList : ICollection {
         }
         _array.Clear();
         unsafe {
-            YogaInterop.YGNodeRemoveAllChildren(_pointer);
+            YogaInterop.YGNodeRemoveAllChildren(_node);
         }
     }
 
@@ -60,7 +59,7 @@ public class NodeList : ICollection {
         _node.SetParent(node);
         _array[index] = node;
         unsafe {
-            YogaInterop.YGNodeSwapChild(_pointer, node.RawPointer, (nuint)index);
+            YogaInterop.YGNodeSwapChild(_node, node, (nuint)index);
         }
     }
     
@@ -72,7 +71,7 @@ public class NodeList : ICollection {
 
 
     public IEnumerator<Node> GetEnumerator() {
-        return new YogaListEnumerator(this);
+        return new NodeListEnumerator(this);
     }
 
     IEnumerator IEnumerable.GetEnumerator() {
@@ -88,7 +87,7 @@ public class NodeList : ICollection {
     public int Count {
         get {
             unsafe {
-                return (int)YogaInterop.YGNodeGetChildCount(_pointer);
+                return (int)YogaInterop.YGNodeGetChildCount(_node);
             }
         }
     }
@@ -97,7 +96,7 @@ public class NodeList : ICollection {
     public object SyncRoot => this;
 }
 
-internal class YogaListEnumerator : IEnumerator<Node> {
+internal class NodeListEnumerator : IEnumerator<Node> {
 
     public bool MoveNext() {
         if (_cursor < _nodeList.Count)
@@ -112,7 +111,7 @@ internal class YogaListEnumerator : IEnumerator<Node> {
     private int _cursor = -1;
     private NodeList _nodeList;
 
-    public YogaListEnumerator(NodeList nodeList) {
+    public NodeListEnumerator(NodeList nodeList) {
         _nodeList = nodeList;
     }
 

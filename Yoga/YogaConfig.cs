@@ -5,19 +5,17 @@ using Yoga.Interop;
 
 namespace Yoga; 
 
-public class YogaConfig : YogaBase {
+public unsafe class YogaConfig : YGObject<YogaConfig> {
 
     public static YogaConfig Default { get; internal set;}
-    public unsafe YogaConfig(void* rawPointer) : base(rawPointer) { }
+    public unsafe YogaConfig(void* pointer) : base(pointer) { }
 
     static YogaConfig() {
         Default = new YogaConfig();
     }
 
     public YogaConfig() {
-        unsafe {
-            RawPointer = YogaInterop.YGConfigNew();
-        }
+        Pointer = YogaInterop.YGConfigNew();
     }
 
     ~YogaConfig() {
@@ -25,91 +23,42 @@ public class YogaConfig : YogaBase {
     }
 
     private void Free() {
-        unsafe {
-            YogaInterop.YGConfigFree(RawPointer);
-        }
+        YogaInterop.YGConfigFree(this);
     }
 
     public bool UseWebDefaults {
         get {
-            unsafe {
-                return YogaInterop.YGConfigGetUseWebDefaults(RawPointer);
-            }
+            return YogaInterop.YGConfigGetUseWebDefaults(this);
         }
         set {
-            unsafe {
-                YogaInterop.YGConfigSetUseWebDefaults(RawPointer, value);
-            }
+            YogaInterop.YGConfigSetUseWebDefaults(this, value);
         }
     }
     
     public float PointScaleFactor {
         get {
-            unsafe {
-                return YogaInterop.YGConfigGetPointScaleFactor(RawPointer);
-            }
+            return YogaInterop.YGConfigGetPointScaleFactor(this);
         }
         set {
-            unsafe {
-                YogaInterop.YGConfigSetPointScaleFactor(RawPointer, value);
-            }
+            YogaInterop.YGConfigSetPointScaleFactor(this, value);
         }
     }
     
     public Errata Errata {
         get {
-            unsafe {
-                return (Errata)YogaInterop.YGConfigGetErrata(RawPointer);
-            }
+            return (Errata)YogaInterop.YGConfigGetErrata(this);
         }
         set {
-            unsafe {
-                YogaInterop.YGConfigSetErrata(RawPointer, (YGErrata)value);
-            }
-        }
-    }
-
-    public object? Context;
-
-    private GCHandle? _contextHandle;
-    
-    [Obsolete(
-        "I don't know why would you use that but if you know what you are doing i'm not stopping you (unlike me)")]
-    public void SetUnmanagedContext<T>(T context) {
-        _contextHandle?.Free();
-
-        _contextHandle = GCHandle.Alloc(context, GCHandleType.Pinned);
-        if (_contextHandle is not null)
-            unsafe {
-                YogaInterop.YGNodeSetContext(RawPointer, _contextHandle.Value.AddrOfPinnedObject().ToPointer());
-                return;
-            }
-    }
-
-    [Obsolete(
-        "I don't know why would you use that but if you know what you are doing i'm not stopping you (unlike me)")]
-    public T GetUnmanagedContext<T>() {
-        unsafe {
-            var ptr = YogaInterop.YGNodeGetContext(RawPointer);
-            var method = new DynamicMethod("ConvertPtrToObjReference", typeof(T),
-                new[] {typeof(void*)});
-            var gen = method.GetILGenerator();
-            gen.Emit(OpCodes.Ldarg_0);
-            gen.Emit(OpCodes.Ret);
-            return (T) method.Invoke(null, BindingFlags.Default, null, new[] {(object) new IntPtr(ptr)}, null);
+            YogaInterop.YGConfigSetErrata(this, (YGErrata)value);
         }
     }
 
     public void SetExperimentalFeatureEnabled(YogaExperimentalFeature feature, bool enabled) {
-        unsafe {
-            YogaInterop.YGConfigSetExperimentalFeatureEnabled(RawPointer, (YGExperimentalFeature)feature, enabled);
-        }
+        YogaInterop.YGConfigSetExperimentalFeatureEnabled(this, (YGExperimentalFeature)feature, enabled);
     }
     
     public bool IsExperimentalFeatureEnabled(YogaExperimentalFeature feature) {
-        unsafe {
-            return YogaInterop.YGConfigIsExperimentalFeatureEnabled(RawPointer, (YGExperimentalFeature)feature);
-        }
+        return YogaInterop.YGConfigIsExperimentalFeatureEnabled(this, (YGExperimentalFeature)feature);
     }
     
     public delegate int YogaLoggingFunction(YogaConfig config, IntPtr node, LogLevel logLevel,
@@ -123,23 +72,21 @@ public class YogaConfig : YogaBase {
     public YogaLoggingFunction? MeasureFunction {
         get => _loggingFunction;
         set {
-            unsafe {
-                _loggingFunction = value;
-                if (_loggingFunction is null) {
-                    YogaInterop.YGConfigSetLogger(RawPointer, null);
-                    return;
-                }
-
-                YGLoggingFunction unmanaged = (config, node, logLevel, format, args) => {
-                    var result = _loggingFunction(this, new IntPtr(node), (LogLevel)logLevel, format->ToString(), new[] {args->ToString()});
-                    return result; //FIXME: how do we handle varargs?
-                };
-
-                YogaInterop.YGConfigSetLogger(RawPointer,
-#pragma warning disable CS8500
-                    (delegate* unmanaged[Cdecl]<void*, void*, YGLogLevel, sbyte*, sbyte*, int>) &unmanaged);
-#pragma warning restore CS8500
+            _loggingFunction = value;
+            if (_loggingFunction is null) {
+                YogaInterop.YGConfigSetLogger(this, null);
+                return;
             }
+
+            YGLoggingFunction unmanaged = (config, node, logLevel, format, args) => {
+                var result = _loggingFunction(this, new IntPtr(node), (LogLevel)logLevel, format->ToString(), new[] {args->ToString()});
+                return result; //FIXME: how do we handle varargs?
+            };
+
+            YogaInterop.YGConfigSetLogger(this,
+#pragma warning disable CS8500
+                (delegate* unmanaged[Cdecl]<void*, void*, YGLogLevel, sbyte*, sbyte*, int>) &unmanaged);
+#pragma warning restore CS8500
         }
     }
 }

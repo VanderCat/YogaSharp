@@ -63,7 +63,7 @@ public class YGSharpAlignBaselineTest {
         child2.Children.Add(child2_2);
         
         unsafe {
-            YogaInterop.YGNodeSetBaselineFunc(child2_2.RawPointer, &BaselineFunction);
+            YogaInterop.YGNodeSetBaselineFunc(child2_2, &BaselineFunction);
         }
         
         child2_2.IsReferenceBaseline = true;

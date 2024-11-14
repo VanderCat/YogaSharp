@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Drawing;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
@@ -7,26 +8,91 @@ using Yoga.Interop;
 
 namespace Yoga;
 
-public partial class Node : YogaBase {
+public unsafe partial class Node : YGObject<Node>, IDisposable {
+    
+    private static Node GetOrCreate(nint ptr) {
+        lock (__OBJECT_CACHE) {
+            if (__OBJECT_CACHE.TryGetValue(ptr, out var weakRef)) {
+                if (weakRef.TryGetTarget(out var existing))
+                    return existing;
+                __OBJECT_CACHE.Remove(ptr);
+            }
+
+            var obj = new Node();
+            __OBJECT_CACHE[ptr] = new WeakReference<Node>(obj);
+            return obj;
+        }
+    }
+    
+    public static implicit operator Node(void* o) => GetOrCreate((nint)o);
+    public static implicit operator Node(nint o) => GetOrCreate(o);
+    
+    protected Node(void* pointer) : base(pointer) {
+        Children = new NodeList(this);
+    }
+
+    public Node() {
+        Pointer = YogaInterop.YGNodeNew();
+        Children = new NodeList(this);
+        __OBJECT_CACHE.Add(this, new WeakReference<Node>(this));
+        SetDirtiedEvent();
+    }
+
+    public Node(YogaConfig config) {
+        Pointer = YogaInterop.YGNodeNewWithConfig(config);
+
+        Children = new NodeList(this);
+        __OBJECT_CACHE.Add(this, new WeakReference<Node>(this));
+
+        SetDirtiedEvent();
+    }
+    
+    private bool _disposed;
+    
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+ 
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed) return;
+        if (disposing) {
+            __CONTEXT_CACHE.Remove(this);
+        }
+        Free();
+        _disposed = true;
+    }
+    
+    ~Node()
+    {
+        Dispose (false);
+    }
+
+    public void SetDirtiedEvent() {
+        dirtiedFunctionUnmanaged = (void* node) => {
+            HaveDirtied?.Invoke(this);
+        };
+        DirtiedFunc = dirtiedFunctionUnmanaged;
+    }
+
+    public DirtiedFunctionUnmanaged DirtiedFunc {
+        get => Marshal.GetDelegateForFunctionPointer<DirtiedFunctionUnmanaged>((IntPtr)YogaInterop.YGNodeGetDirtiedFunc(this));
+        set => YogaInterop.YGNodeSetDirtiedFunc(this, (delegate* unmanaged[Cdecl]<void*, void>)Marshal.GetFunctionPointerForDelegate(value));
+    }
+    
     private YogaConfig? _config;
 
     public YogaConfig? Config {
         get => _config;
         set {
-            unsafe {
-                _config = value;
-                if (value is not null)
-                    YogaInterop.YGNodeSetConfig(RawPointer, value.RawPointer);
-            }
+            _config = value;
+            //FIXME: if we null config what should we do?
+            if (value is not null)
+                YogaInterop.YGNodeSetConfig(this, value);
         }
     }
-    
-    public unsafe object? UserData {
-        get => __USERDATA_CACHE.TryGetValue((nint)RawPointer, out var result) ? result : null;
-        set => __USERDATA_CACHE[(nint)RawPointer] = value;
-    }
-    
-    internal static Dictionary<nint, object?> __USERDATA_CACHE = new();
 
     private Node? _owner;
 
@@ -45,260 +111,145 @@ public partial class Node : YogaBase {
     }
 
     public bool IsDirty {
-        get {
-            unsafe {
-                return YogaInterop.YGNodeIsDirty(RawPointer);
-            }
-        }
+        get => YogaInterop.YGNodeIsDirty(this);
         set {
-            unsafe {
-                if (value) YogaInterop.YGNodeMarkDirty(RawPointer);
-            }
+                if (value) YogaInterop.YGNodeMarkDirty(this);
         }
     }
 
     public bool HasNewLayout {
-        get {
-            unsafe {
-                return YogaInterop.YGNodeGetHasNewLayout(RawPointer);
-            }
-        }
-        set {
-            unsafe {
-                YogaInterop.YGNodeSetHasNewLayout(RawPointer, value);
-            }
-        }
+        get => YogaInterop.YGNodeGetHasNewLayout(this);
+        set => YogaInterop.YGNodeSetHasNewLayout(this, value);
     }
 
     public delegate void DirtiedFunction(Node node);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private unsafe delegate void DirtiedFunctionUnmanaged(void* node);
-
+    public delegate void DirtiedFunctionUnmanaged(void* node);
+    
     public event DirtiedFunction? HaveDirtied;
 
-    private unsafe DirtiedFunctionUnmanaged InvokeDirtiedEventGenerator() {
-
-        return node => { HaveDirtied?.Invoke(this); };
-    }
+    private DirtiedFunctionUnmanaged dirtiedFunctionUnmanaged;
 
     public bool IsReferenceBaseline {
-        get {
-            unsafe {
-                return YogaInterop.YGNodeIsReferenceBaseline(RawPointer);
-            }
-        }
-        set {
-            unsafe {
-                YogaInterop.YGNodeSetIsReferenceBaseline(RawPointer, value);
-            }
-        }
+        get => YogaInterop.YGNodeIsReferenceBaseline(this);
+        set => YogaInterop.YGNodeSetIsReferenceBaseline(this, value);
     }
 
     public NodeList Children { get; }
 
-    unsafe ~Node() {
-        __USERDATA_CACHE.Remove((nint) RawPointer);
-        NodeFinalize(); //idk? what should i use here? finalizer? just straight up free?
-    }
-
-    private unsafe void AddDirtiedFunc() {
-        var dirt = InvokeDirtiedEventGenerator();
-
-#pragma warning disable CS8500
-        YogaInterop.YGNodeSetDirtiedFunc(RawPointer,
-            (delegate* unmanaged[Cdecl]<void*, void>) &dirt); //i hope this works (upd: IT DID NOT)
-#pragma warning restore CS8500
-    }
-
-    public unsafe Node(void* rawPointer) : base(rawPointer) {
-        Children = new NodeList(this);
-        //AddDirtiedFunc();
-    }
-
-    public Node() {
-        unsafe {
-            RawPointer = YogaInterop.YGNodeNew();
-        }
-
-        Children = new NodeList(this);
-        //AddDirtiedFunc();
-    }
-
-    public Node(YogaConfig config) {
-        unsafe {
-            RawPointer = YogaInterop.YGNodeNewWithConfig(config.RawPointer);
-        }
-
-        Children = new NodeList(this);
-        //AddDirtiedFunc();
-    }
-
     public Node Clone() {
-        unsafe {
-            var cloned = new Node(YogaInterop.YGNodeClone(RawPointer)) {
-                _config = _config
-            };
-            return cloned;
-        }
+        var cloned = new Node(YogaInterop.YGNodeClone(this)) {
+            _config = _config
+        };
+        return cloned;
     }
 
 #if DEBUG
     // YGNodePrint only exist in debug builds of yoga
     public void Print(PrintOptions printOptions) {
-        unsafe {
-            YogaInterop.YGNodePrint(RawPointer, (YGPrintOptions) printOptions);
-        }
+        YogaInterop.YGNodePrint(this, (YGPrintOptions) printOptions);
     }
 #endif
 
     public void Reset() {
-        unsafe {
-            YogaInterop.YGNodeReset(RawPointer);
-        }
+        YogaInterop.YGNodeReset(this);
     }
 
     public void CalculateLayout(float width = Undefined, float height = Undefined,
         Direction direction = Direction.Inherit) {
-        unsafe {
-            YogaInterop.YGNodeCalculateLayout(RawPointer, width, height, (YGDirection) direction);
-        }
+        YogaInterop.YGNodeCalculateLayout(this, width, height, (YGDirection) direction);
     }
 
     internal void Free() {
-
-        unsafe {
-            YogaInterop.YGNodeFree(RawPointer);
-        }
+        YogaInterop.YGNodeFree(this);
     }
 
     internal void FreeRecursive() {
-        unsafe {
-            foreach (var child in Children) {
-                child.FreeRecursive();
-            }
-
-            Free();
-            //YogaInterop.YGNodeFreeRecursive(RawPointer);
+        foreach (var child in Children) {
+            child.FreeRecursive();
         }
+
+        Free();
+        //YogaInterop.YGNodeFreeRecursive(RawPointer);
     }
 
     internal void NodeFinalize() {
-        unsafe {
-            YogaInterop.YGNodeFinalize(RawPointer);
-        }
+        YogaInterop.YGNodeFinalize(this);
     }
 
-    private GCHandle? _contextHandle;
-
-    [Obsolete(
-        "I don't know why would you use that but if you know what you are doing i'm not stopping you (unlike me)")]
-    public void SetUnmanagedContext<T>(T context) {
-        _contextHandle?.Free();
-
-        _contextHandle = GCHandle.Alloc(context, GCHandleType.Pinned);
-        if (_contextHandle is not null)
-            unsafe {
-                YogaInterop.YGNodeSetContext(RawPointer, _contextHandle.Value.AddrOfPinnedObject().ToPointer());
-                return;
-            }
-    }
-
-    [Obsolete(
-        "I don't know why would you use that but if you know what you are doing i'm not stopping you (unlike me)")]
-    public T GetUnmanagedContext<T>() {
-        unsafe {
-            var ptr = YogaInterop.YGNodeGetContext(RawPointer);
-            var method = new DynamicMethod("ConvertPtrToObjReference", typeof(T),
-                new[] {typeof(void*)});
-            var gen = method.GetILGenerator();
-            gen.Emit(OpCodes.Ldarg_0);
-            gen.Emit(OpCodes.Ret);
-            return (T) method.Invoke(null, BindingFlags.Default, null, new[] {(object) new IntPtr(ptr)}, null);
-        }
-    }
-
-    public delegate Tuple<float, float> YogaMeasureFunction(Node node, float width, MeasureMode widthMode,
+    public delegate SizeF MeasureFunc(Node node, float width, MeasureMode widthMode,
         float height, MeasureMode heightMode);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private unsafe delegate YGSize YGMeasureFunction(void* node, float width, YGMeasureMode widthMode, float height,
+    private delegate YGSize MeasureFuncUnmanaged(void* node, float width, YGMeasureMode widthMode, float height,
         YGMeasureMode heightMode);
 
-    private YogaMeasureFunction? _measureFunction;
+    private MeasureFuncUnmanaged _measureFuncUnmanaged;
 
-    public YogaMeasureFunction? MeasureFunction {
+    private MeasureFunc? _measureFunction;
+
+    public MeasureFunc? MeasureFunction {
         get => _measureFunction;
         set {
-            unsafe {
-                _measureFunction = value;
-                if (_measureFunction is null) {
-                    YogaInterop.YGNodeSetMeasureFunc(RawPointer, null);
-                    return;
-                }
-
-                YGMeasureFunction unmanaged = (node, width, mode, height, heightMode) => {
-                    var result = _measureFunction.Invoke(this, width, (MeasureMode) mode, height,
-                        (MeasureMode) heightMode);
-                    return new YGSize() {
-                        width = result.Item1,
-                        height = result.Item2
-                    };
-                };
-
-                YogaInterop.YGNodeSetMeasureFunc(RawPointer,
-#pragma warning disable CS8500
-                    (delegate*unmanaged[Cdecl]<void*, float, YGMeasureMode, float, YGMeasureMode, YGSize>) &unmanaged);
-#pragma warning restore CS8500
+            _measureFunction = value;
+            if (_measureFunction is null) {
+                YogaInterop.YGNodeSetMeasureFunc(this, null);
+                return;
             }
+
+            _measureFuncUnmanaged = (node, width, mode, height, heightMode) => {
+                var result = _measureFunction.Invoke(this, width, (MeasureMode) mode, height,
+                    (MeasureMode) heightMode);
+                return new() {
+                    width = result.Width,
+                    height = result.Height
+                };
+            };
+
+            YogaInterop.YGNodeSetMeasureFunc(this,
+                (delegate*unmanaged[Cdecl]<void*, float, YGMeasureMode, float, YGMeasureMode, YGSize>)
+                Marshal.GetFunctionPointerForDelegate(_measureFuncUnmanaged));
         }
     }
 
-    public delegate float YogaBaselineFunction(Node node, float width, float height);
+    public delegate float BaselineFunc(Node node, float width, float height);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private unsafe delegate float YGBaselineFunc(void* node, float width, float height);
+    private delegate float BaselineFuncUnmanaged(void* node, float width, float height);
 
-    private YogaBaselineFunction? _baselineFunction;
+    private BaselineFuncUnmanaged? _baselineFunctionUnmanaged;
+    
+    private BaselineFunc? _baselineFunction;
 
-    public YogaBaselineFunction? BaselineFunction {
+    public BaselineFunc? BaselineFunction {
         get => _baselineFunction;
         set {
-            unsafe {
-                _baselineFunction = value;
-                if (_baselineFunction is null) {
-                    YogaInterop.YGNodeSetBaselineFunc(RawPointer, null);
-                    return;
-                }
-
-                YGBaselineFunc unmanaged = (node, width, height) => _baselineFunction(this, width, height);
-
-                YogaInterop.YGNodeSetBaselineFunc(RawPointer,
-#pragma warning disable CS8500
-                    (delegate*unmanaged[Cdecl]<void*, float, float, float>) &unmanaged);
-#pragma warning restore CS8500
+            _baselineFunction = value;
+            if (_baselineFunction is null) {
+                YogaInterop.YGNodeSetBaselineFunc(this, null);
+                return;
             }
+
+            _baselineFunctionUnmanaged = (node, width, height) => _baselineFunction(this, width, height);
+
+            YogaInterop.YGNodeSetBaselineFunc(this,
+                (delegate*unmanaged[Cdecl]<void*, float, float, float>) Marshal.GetFunctionPointerForDelegate(_baselineFunctionUnmanaged));
         }
     }
 
     public NodeType Type {
         get {
-            unsafe {
-                return (NodeType)YogaInterop.YGNodeGetNodeType(RawPointer);
-            }
+            return (NodeType)YogaInterop.YGNodeGetNodeType(this);
         }
         set {
-            unsafe {
-                YogaInterop.YGNodeSetNodeType(RawPointer, (YGNodeType)value);
-            }
+            YogaInterop.YGNodeSetNodeType(this, (YGNodeType)value);
         }
     }
 
     public bool AlwaysFormsContainingBlock {
         set {
-            unsafe {
-                YogaInterop.YGNodeSetAlwaysFormsContainingBlock(RawPointer, value);
-            }
+            YogaInterop.YGNodeSetAlwaysFormsContainingBlock(this, value);
         }
     }
 
